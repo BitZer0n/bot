@@ -11,13 +11,12 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "ejs": "^2.5.6",
+    "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "moment": "^2.20.1",
     "mysql": "^2.15.0",
-    "mysqli": "^2.0.1",
     "node-telegram-bot-api": "^0.30.0",
-    "telegraf": "^3.17.2",
+    "path": "^0.12.7",
+    "telegraf": "^3.17.5",
     "utf8": "^3.0.0"
   },
   "devDependencies": {

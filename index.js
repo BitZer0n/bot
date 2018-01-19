@@ -53,7 +53,8 @@ setInterval(function() {
 
 bot.start((ctx) => {
   console.log('started:', ctx.from.id);
-
+  console.log(ctx.chat);
+if(ctx.chat == 'private') {
   client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) {
     if (error) throw error;
     var first_msg = "Err";
@@ -71,6 +72,10 @@ bot.start((ctx) => {
 
     return ctx.reply(first_msg);
   });
+} else {
+
+  return ctx.reply("Здравствуйте, " + ctx.from.title  + "! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу рассписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3");
+}
 })
 
 var schedule = [
