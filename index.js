@@ -117,19 +117,13 @@ bot.command('week', (ctx) => ctx.reply("Понедельник \n1. (325) Алг
 bot.command('time', (ctx) => { var d = new Date();ctx.reply((d.getHours()+2) + ":" + d.getMinutes())});
 bot.command('day', (ctx) => { var d = new Date(); var today = d.getDay();ctx.reply(schedule[today])});
 
-if(ctx.chat.type == 'private') {
-bot.command('dayon', (ctx) => { ;client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!"); });
-bot.command('dayoff', (ctx) => { client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня."); });
 
-bot.command('timingon', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!"); });
-bot.command('timingoff', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока."); });
-} else {
-  bot.command('dayon', (ctx) => { client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!"); });
-  bot.command('dayoff', (ctx) => { client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня."); });
-  
-  bot.command('timingon', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!"); });
-  bot.command('timingoff', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока."); });
-}
+bot.command('dayon', (ctx) => { if(ctx.chat.type == 'private') {client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!");} else {client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!");} });
+bot.command('dayoff', (ctx) => { if(ctx.chat.type == 'private') {client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня.");} else {client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня.");} });
+
+bot.command('timingon', (ctx) => { if(ctx.chat.type == 'private') {client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!");} else {client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!");} });
+bot.command('timingoff', (ctx) => {if(ctx.chat.type == 'private') {client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока.");} else {client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока.");} });
+
 
 bot.command('homework', (ctx) => ctx.reply("Coming soon"));
 bot.command('daywork', (ctx) => ctx.reply("Coming soon"));
