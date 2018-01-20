@@ -17,43 +17,20 @@ express()
   .get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-// var client = mysql.createConnection({
-//   host: "192.168.1.5",
-//   user: "root",
-//   password: "",
-//   database: "telegram_bot"
-// });
 var client = mysql.createConnection({
   host: "brbxdtmwt-mysql.services.clever-cloud.com",
   user: "usukz97syx2pbe1d",
   password: "PAjgJazrIbraCPm4d4D",
   database: "brbxdtmwt"
 });
-
-var SettingsObj = {day: true, timing: true}
-
-var UsersAllowTimingArr = [];
-
-var UsersAllowDay = [];
-
 setInterval(function() {
   client.query('SELECT 1');
 }, 5000);
 
-// bot.start((ctx) => {
-//   console.log(UsersAllowTimingArr);
-//   if(UsersAllowTimingArr.indexOf(ctx.from.id) == -1) {
-//     UsersAllowTimingArr.push(ctx.from.id);
-//   }
-  
-//   console.log('started:', ctx.from.id)
-//   var first_msg = "Здравствуйте, господин! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу рассписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3";
-//   return ctx.reply(first_msg)
-// })
 
 bot.start((ctx) => {
   console.log('started:', ctx.from.id);
-  console.log(ctx.chat);
+  console.log(ctx.from);
 if(ctx.chat.type == 'private') {
   client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) {
     if (error) throw error;
@@ -73,7 +50,7 @@ if(ctx.chat.type == 'private') {
     return ctx.reply(first_msg);
   });
 } else {
-  client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) { if(result.length == 0) {client.query(mysql.format("INSERT INTO users(id, chat, name, timing, day) VALUES (NULL, " + ctx.from.id + ", '" + ctx.chat.title + "', 1, 1)"), function(error, result, fields) {});} });
+  client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.chat.id + "\""), function(error, result, fields) { if(result.length == 0) {client.query(mysql.format("INSERT INTO users(id, chat, name, timing, day) VALUES (NULL, " + ctx.chat.id + ", '" + ctx.chat.title + "', 1, 1)"), function(error, result, fields) {});} });
   return ctx.reply("Здравствуйте, " + ctx.chat.title  + "! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу рассписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3");
 }
 })
@@ -132,8 +109,6 @@ var schedule = [
   "Воскресенье :D"
 ]
 
-bot.hears('Привет', (ctx) => ctx.reply('Привет!'));
-bot.hears('привет', (ctx) => ctx.reply('Привет!'));
 bot.hears('Лещионизм', (ctx) => ctx.reply('Лещионизм -- как смысл жизни!'));
 
 bot.command('YumiBot', (ctx) => ctx.reply("/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу рассписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день."))
@@ -142,11 +117,19 @@ bot.command('week', (ctx) => ctx.reply("Понедельник \n1. (325) Алг
 bot.command('time', (ctx) => { var d = new Date();ctx.reply((d.getHours()+2) + ":" + d.getMinutes())});
 bot.command('day', (ctx) => { var d = new Date(); var today = d.getDay();ctx.reply(schedule[today])});
 
-bot.command('dayon', (ctx) => { console.log("DAYON");client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!"); });
-bot.command('dayoff', (ctx) => { console.log("DAYOFF");client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня."); });
+if(ctx.chat.type == 'private') {
+bot.command('dayon', (ctx) => { ;client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!"); });
+bot.command('dayoff', (ctx) => { client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня."); });
 
-bot.command('timingon', (ctx) => { console.log("timingon");client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!"); })
-bot.command('timingoff', (ctx) => { console.log("timingoff");client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока."); });
+bot.command('timingon', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!"); });
+bot.command('timingoff', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.from.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока."); });
+} else {
+  bot.command('dayon', (ctx) => { client.query(mysql.format("UPDATE users SET day = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду отсылать вам расписание в начале дня!"); });
+  bot.command('dayoff', (ctx) => { client.query(mysql.format("UPDATE users SET day = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду отсылать вам расписание в начале дня."); });
+  
+  bot.command('timingon', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '1' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Теперь я буду уведомлять вас за 5 минут до конца урока!"); });
+  bot.command('timingoff', (ctx) => { client.query(mysql.format("UPDATE users SET timing = '0' WHERE chat = '" + ctx.chat.id + "'"));ctx.reply("Я больше не буду уведомлять вас за 5 минут до конца урока."); });
+}
 
 bot.command('homework', (ctx) => ctx.reply("Coming soon"));
 bot.command('daywork', (ctx) => ctx.reply("Coming soon"));
@@ -472,19 +455,6 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 } 
 
-// var UsersAllowTimingArr = [];
-// var UsersAllowTiming = function(callback) {
-
-//   client.query(mysql.format("SELECT * FROM users WHERE timing = '1'"), function(error, result, fields) {
-//     if(result.length) {
-//       for(var i = 0;i < result.length;i++) {
-//         UsersAllowTimingArr.push(result[i].chat);
-//       }
-//     }
-//     callback(null, result);
-//   });
-// }
-
 function getCurrendWeek() {
   var currentDateTime = new Date(); 
   var startTimeOfCurrentYear = (new Date(currentDateTime.getFullYear(), 0, 1)).getTime(); 
@@ -501,11 +471,9 @@ setInterval(function(ctx) {
   var hour_now = d.getHours() + 2;
   var minutes_now = d.getMinutes();
   var day_now = d.getDay();
-  
+  if(day_now != 0 && day_now != 6) {
   client.query(mysql.format("SELECT * FROM users WHERE day = '1'"), function(error, result, fields) {
     result.forEach(function(entry) {
-      console.log(entry);
-      if(day_now != 0 && day_now != 6) {
         if(hour_now == 7 && minutes_now == 0 && day_now == 1) {
           var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomDayReplicas.monday[getRandom(0, 4)]);
           request.get({ uri: host_req, encoding: 'utf-8' });
@@ -542,7 +510,6 @@ setInterval(function(ctx) {
             request.get({ uri: host_req, encoding: 'utf-8' });
           }
         }
-      }
     });
   });
   client.query(mysql.format("SELECT * FROM users WHERE day = '1'"), function(error, result, fields) {
@@ -596,6 +563,7 @@ setInterval(function(ctx) {
       }
     });
   });
+}
 }, 60000);
 
 // STICKER
