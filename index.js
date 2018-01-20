@@ -561,7 +561,11 @@ setInterval(function(ctx) {
 }, 60000);
 
 // STICKER
-bot.on('sticker', (ctx) => ctx.reply('👍'))
+bot.on('sticker', (ctx) => ctx.reply('👍'));
+
+// CHAT MEMBERS 
+bot.on('new_chat_members', (ctx) => {ctx.reply("Поприветствуем " + ctx.message.new_chat_member.first_name + "!");});
+bot.on('left_chat_member', (ctx) => {ctx.reply(ctx.message.left_chat_member.first_name + " покинул группу!");});
 
 // COUB
 randCoubFunc = function(n) {
