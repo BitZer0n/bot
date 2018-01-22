@@ -533,7 +533,7 @@ setInterval(function(ctx) {
       }
       // fourth
       if(hour_now == 11 && minutes_now == 45) {
-        var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomAlarmReplicas.Four[getRandom(0, 5)]);
+        var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomAlarmReplicas.preFour[getRandom(0, 5)]);
         request.get({ uri: host_req, encoding: 'utf-8' });
       }
       // fourth end
