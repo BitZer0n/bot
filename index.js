@@ -27,7 +27,6 @@ setInterval(function() {
   client.query('SELECT 1');
 }, 5000);
 
-
 bot.start((ctx) => {
   console.log('started:', ctx.from.id);
   console.log(ctx.from);
@@ -35,16 +34,21 @@ if(ctx.chat.type == 'private') {
   client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) {
     if (error) throw error;
     var first_msg = "Err";
+    console.log(result);
     if(result.length != 0) {
       first_msg = "Здравствуйте, " + result[0].name + "! \nЧем я могу быть полезна?";
     } else {
       console.log("NEW_USER");
       first_msg = "Введите имя.";
       bot.on('text', (ctx) => {
-        client.query(mysql.format("INSERT INTO users(id, chat, name, timing, day) VALUES (NULL, " + ctx.from.id + ", '" + ctx.message.text + "', 1, 1)"), function(error, result, fields) {
-          ctx.reply("Здравствуйте, " + ctx.message.text  + "! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу расписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3");
+        client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) {
+          if(result.length == 0) {
+            client.query(mysql.format("INSERT INTO users(id, chat, name, timing, day) VALUES (NULL, " + ctx.from.id + ", '" + ctx.message.text + "', 1, 1)"), function(error, result, fields) {
+              ctx.reply("Здравствуйте, " + ctx.message.text  + "! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу расписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3");
+            });
+          }
         });
-      })
+      });
     }
 
     return ctx.reply(first_msg);
@@ -53,7 +57,9 @@ if(ctx.chat.type == 'private') {
   client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.chat.id + "\""), function(error, result, fields) { if(result.length == 0) {client.query(mysql.format("INSERT INTO users(id, chat, name, timing, day) VALUES (NULL, " + ctx.chat.id + ", '" + ctx.chat.title + "', 1, 1)"), function(error, result, fields) {});} });
   return ctx.reply("Здравствуйте, " + ctx.chat.title  + "! \nМеня зовут Юми-чан, я буду помогать вам с ежедневными делами, что бы взаимодействовать со мной, можете использовать эти команды:\n\n/YumiBot - Покажу все доступные команды для взаимодействия. \n/week Покажу расписание на всю неделю. \n/day Покажу расписание на определённый день. \n/dayon Буду уведомлять вас о расписании в начале дня. \n/dayoff Перестану уведомлять о расписании. \n/timingon Уведомлю вас о скорейшем окончании урока. \n/timingoff Перестану уведомлять о скорейшем окончании урока. \n/homework Покажу вам домашнее задание на неделю. \n/daywork Покажу вам домашнее задание на определённый день.  \n\nВот все мои возможности, надеюсь буду вам полезна:3");
 }
-})
+});
+
+
 
 var schedule = [
   "Воскресенье :D",
