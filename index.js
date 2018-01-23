@@ -558,7 +558,7 @@ setInterval(function(ctx) {
           var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomAlarmReplicas.lastLeasson[getRandom(0, 5)]);
           request.get({ uri: host_req, encoding: 'utf-8' });
         } else {
-          var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomAlarmReplicas.friday[getRandom(0, 10)]);
+          var host_req = "https://api.telegram.org/bot392530919:AAHeP9u9cupf1NTthTH6dY-24RSyk3diayU/sendMessage?chat_id="+ entry.chat +"&text=" + utf8.encode(randomAlarmReplicas.all[getRandom(0, 10)]);
           request.get({ uri: host_req, encoding: 'utf-8' });
         }
       }
