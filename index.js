@@ -39,7 +39,7 @@ if(ctx.chat.type == 'private') {
       first_msg = "Здравствуйте, " + result[0].name + "! \nЧем я могу быть полезна?";
     } else {
       console.log("NEW_USER");
-      first_msg = "Введите имя.";
+      first_msg = "Здравствуйте!\nВедите свое настоящее имя и фамилию:";
       bot.on('text', (ctx) => {
         client.query(mysql.format("SELECT * FROM users WHERE chat = \"" + ctx.from.id + "\""), function(error, result, fields) {
           if(result.length == 0) {
