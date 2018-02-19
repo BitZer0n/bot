@@ -588,18 +588,18 @@ randCoubFunc = function(n) {
 }
 bot.command('coub', (ctx) => { ctx.reply(randCoubFunc(5)) });
 
-bot.on('text', (ctx) => {
-  var dateMySQL;
-  dateMySQL = new Date();
-  dateMySQL = dateMySQL.getUTCFullYear() + '-' +
-    ('00' + (dateMySQL.getUTCMonth()+1)).slice(-2) + '-' +
-    ('00' + dateMySQL.getUTCDate()).slice(-2) + ' ' + 
-    ('00' + dateMySQL.getUTCHours()).slice(-2) + ':' + 
-    ('00' + dateMySQL.getUTCMinutes()).slice(-2) + ':' + 
-    ('00' + dateMySQL.getUTCSeconds()).slice(-2);
-  client.query(mysql.format("INSERT INTO `logs` (`id`, `username`, `massage`, `time`) VALUES (NULL, '" + ctx.from.username + "', '"+ ctx.message.text + "', '" + dateMySQL + "')"), function(error, result, fields) {
+// bot.on('text', (ctx) => {
+//   var dateMySQL;
+//   dateMySQL = new Date();
+//   dateMySQL = dateMySQL.getUTCFullYear() + '-' +
+//     ('00' + (dateMySQL.getUTCMonth()+1)).slice(-2) + '-' +
+//     ('00' + dateMySQL.getUTCDate()).slice(-2) + ' ' + 
+//     ('00' + dateMySQL.getUTCHours()).slice(-2) + ':' + 
+//     ('00' + dateMySQL.getUTCMinutes()).slice(-2) + ':' + 
+//     ('00' + dateMySQL.getUTCSeconds()).slice(-2);
+//   client.query(mysql.format("INSERT INTO `logs` (`id`, `username`, `massage`, `time`) VALUES (NULL, '" + ctx.from.username + "', '"+ ctx.message.text + "', '" + dateMySQL + "')"), function(error, result, fields) {
     
-  });
-});
+//   });
+// });
 
 bot.startPolling()
